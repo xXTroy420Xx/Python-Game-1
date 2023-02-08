@@ -1,0 +1,29 @@
+import pygame, sys
+from pygame.locals import QUIT
+
+#Global Setup 
+pygame.init()
+WINDOW_WIDTH, WINDOWS_HEIGHT = 1280,720
+DISPLAYSURF = pygame.display.set_mode((WINDOWS_WIDTH, WINDOWS_HIGHT))
+pygame.display.set_caption('South Park Shooter')
+
+# Game Loop
+while True:
+    #Close Game Event
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+
+    #Section 1 - Sprites & Surfaces
+            #Background, Player, Incomeing Objects, Projectile, Text
+            
+    #section 2 - Inputs & Control (Interaction)
+            #Movement (Mouse), Buttons (Projectiles)
+    
+    #Section 3 - Game Logic & Updates (Gameplay)
+            #mandatory: Movement Code, List For Asteroids, Iteration, Collisions
+            #Score, Lifes, Slits, Audio
+
+    #Final Visual Update To User
+    pygame.display.update()
