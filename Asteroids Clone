@@ -1,18 +1,21 @@
 import pygame, sys
 from pygame.locals import QUIT
-
 #Global Setup 
 pygame.init()
 WINDOW_WIDTH, WINDOW_HIGHT = 1280,720
 display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HIGHT))
 pygame.display.set_caption('Ateroid')
 clock = pygame.time.Clock()
-
 #Ship
-ship_surface = pygame.Surface((70,100))
+ship_surface = pygame.image.load('../sprites/ship.png').convert_alpha()
 ship_rect = ship_surface.get_rect(center = (WINDOW_WIDTH/2, WINDOW_HIGHT/2))
-ship_y_pos = 300
-ship_x_pos = 600
+
+#lazers
+lazer_surface = pygame.image.load('../sprites/lazer.png')
+lazer_rect = lazer_surface.get_rect(center = (ship_rect.center))
+
+#background
+bg_surface = pygame.image.load('../sprites/space.jpg')
 
 # Game Loop
 while True:
@@ -21,20 +24,24 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-        
-    clock.tick(100)
+    
+    clock.tick(200)
 
     #Section 1 - Sprites & Surfaces
             #Background, Player, Incomeing Objects, Projectile, Text
     display_surface.fill((0,0,0))
-    ship_surface.fill((255,255,255))
+    display_surface.blit(bg_surface,(0,0))
     display_surface.blit(ship_surface,ship_rect)
+    display_surface.blit(lazer_surface,lazer_rect)
             
             
     #section 2 - Inputs & Control (Interaction)
             #Movement (Mouse), Buttons (Projectiles)
-    ship_rect.y += 1
-    ship_rect.x += 2
+    #ship_rect.y += 1
+    #ship_rect.x += 2
+    
+    ship_rect.center = pygame.mouse.get_pos()
+    lazer_rect.center = pygame.mouse.get_pos()
     
     
     #Section 3 - Game Logic & Updates (Gameplay)
