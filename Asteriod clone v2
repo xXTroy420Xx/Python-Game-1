@@ -5,20 +5,33 @@ class Ship(pygame.sprite.Sprite):
   def __init__(self,groups):
     super().__init__(groups)
     self.image = pygame.image.load("Sprites/player.png").convert_alpha()
-    self.rect = self.image.get_rect(center =(300,200))
-    
+    self.rect = self.image.get_rect(center =(SCREEN_W/2, SCREEN_H/2))
+
   def movement(self):
-    current_keys = pygame.key.get_pressed()
-    if current_keys[pygame.K_w]:
-      self.rect.y += -1
-
-    if current_keys[pygame.K_s]:
-      self.rect.y += 1
-
+    if(self.rect.x >= (SCREEN_W-50)):
+      self.rect.x -= 10;
+      
+    elif(self.rect.x <= 0):
+      self.rect.x += 10;
+      
+    elif(self.rect.y <= 0):
+      self.rect.y += 10;
+      
+    elif(self.rect.y >= (SCREEN_H-50)):
+      self.rect.y -= 10
+      
+    else: 
+      current_keys = pygame.key.get_pressed()
+      if current_keys[pygame.K_w]:
+        self.rect.y += -1
+  
+      if current_keys[pygame.K_s]:
+        self.rect.y += 1
+  
   def rotate(self):
     current_keys = pygame.key.get_pressed()
     if current_keys[pygame.K_a]:
-      self.rect.x += -1
+        self.rect.x += -1
     if current_keys[pygame.K_d]:
       self.rect.x += 1
 
@@ -60,4 +73,4 @@ while True:
   spaceship_group.draw(display_surface)
 
 	#Draw Call - Final
-  pygame.display.update() 
+  pygame.display.update()
