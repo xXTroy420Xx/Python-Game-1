@@ -1,0 +1,67 @@
+import easygui
+
+def rgb_to_hex(rgb): 
+    r, g, b = rgb
+    return '#{:02x}{:02x}{:02x}'.format(r,g,b)
+
+def hex_to_rgb(hex_value):
+    #Removes the '#' prefix if present
+    hex_value = hex_value.strip("#")
+    #Convert the hexadecimal value to RGB
+    r = int(hex_value[0:2], 16)
+    g = int(hex_value[2:4], 16)
+    b = int(hex_value[4:6], 16)
+
+    return (r, g, b)
+
+def hex_to_binary(hex_value):
+    binary_value = bin(int(hex_value, 16))[2:]
+    return binary_value
+    
+def binary_to_hex(binary_value):
+    hex_value = hex(int(binary_value, 2))[2:]
+    return hex_value
+
+while True:
+    #the choices
+    choices = ['RGB to Hex', 'Hex to RGB', 'Hex to Binary', 'Binary to Hex']
+    #display the menu
+    choice = easygui.buttonbox("Select a Conversion:", choices=choices, title = 'Conversions')
+
+    if choice == 'RGB to Hex':
+        #takes in 3 values 
+        rgb = easygui.multenterbox('Enter in RGB Values', fields = ['R', 'G', 'B'])
+        if rgb is not None:
+            try:
+                hex_value = rgb_to_hex([int(value) for value in rgb])
+                easygui.msgbox('Hexadecimal value: {}'.format(hex_value), title='')
+            except ValueError:
+                easygui.msgbox('Invalid RGB values. Please enter valid integers.', title='Error')
+
+    elif choice == 'Hex to RGB':
+        hex_value = easygui.enterbox('Enter a Hexadecimal Value:')
+        if hex_value is not None:
+            try:
+                rgb = hex_to_rgb(hex_value)
+                easygui.msgbox('RGB values: {}'.format(rgb), title='Conversion Result')
+            except ValueError:
+                easygui.msgbox('Invalid hexadecimal value. Please enter a valid value.', title='Error')
+    
+    elif choice == 'Hex to Binary':
+        hex_value = easygui.enterbox('Enter a Hexadecimal Value:')
+        if hex_value is not None:
+            try:
+                binary_value = hex_to_binary(hex_value)
+                easygui.msgbox('Binary values: {}'.format(binary_value), title='Conversion Result')
+            except ValueError:
+                easygui.msgbox('Invalid hexadecimal value. Please enter a valid value.', title='Error')
+
+    elif choice == 'Binary to Hex':
+        binary_value = easygui.enterbox("Enter a binary value:")
+        if binary_value is not None:
+            try:
+                hex_value = binary_to_hex(binary_value)
+                easygui.msgbox('Hexadecimal value: {}'.format(hex_value), title='Conversion Result')
+            except ValueError:
+                easygui.msgbox('Invalid binary value. Please enter a valid value.', title='Error')
+    exit()
