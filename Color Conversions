@@ -1,20 +1,26 @@
 import easygui
+import os
+
+# Dictionary to store conversion results
+conversion_results = {}
 
 def rgb_to_hex(rgb): 
-    r, g, b = rgb
-    return '#{:02x}{:02x}{:02x}'.format(r,g,b)
+    r, g, b = map(int,rgb)
+    temp = f'#{r:02x}{g:02x}{b:02x}'
+    return temp
 
 def hex_to_rgb(hex_value):
     #Removes the '#' prefix if present
-    hex_value = hex_value.strip("#")
+    hex_value = hex_value.strip('#')
     #Convert the hexadecimal value to RGB
     r = int(hex_value[0:2], 16)
     g = int(hex_value[2:4], 16)
     b = int(hex_value[4:6], 16)
-
-    return (r, g, b)
+    rgb = (r, g, b)
+    return rgb
 
 def hex_to_binary(hex_value):
+    hex_value = hex_value.strip('#')
     binary_value = bin(int(hex_value, 16))[2:]
     return binary_value
     
@@ -26,15 +32,17 @@ while True:
     #the choices
     choices = ['RGB to Hex', 'Hex to RGB', 'Hex to Binary', 'Binary to Hex']
     #display the menu
-    choice = easygui.buttonbox("Select a Conversion:", choices=choices, title = 'Conversions')
+    choice = easygui.buttonbox('Select a Conversion:', choices=choices, title = 'Conversions')
 
     if choice == 'RGB to Hex':
         #takes in 3 values 
         rgb = easygui.multenterbox('Enter in RGB Values', fields = ['R', 'G', 'B'])
         if rgb is not None:
             try:
-                hex_value = rgb_to_hex([int(value) for value in rgb])
-                easygui.msgbox('Hexadecimal value: {}'.format(hex_value), title='')
+                hex_value = rgb_to_hex(rgb)
+                binary_value = hex_to_binary(hex_value)
+                conversion_results['RGB to Hex'] = {'RGB': rgb, 'Hex': hex_value, 'Binary': binary_value}
+                easygui.msgbox(msg='Hexadecimal value: {}\n\nRGB value: {}\n\nBinary value: {}'.format(hex_value,rgb,binary_value), title='Conversion Result')
             except ValueError:
                 easygui.msgbox('Invalid RGB values. Please enter valid integers.', title='Error')
 
@@ -43,7 +51,9 @@ while True:
         if hex_value is not None:
             try:
                 rgb = hex_to_rgb(hex_value)
-                easygui.msgbox('RGB values: {}'.format(rgb), title='Conversion Result')
+                binary_value = hex_to_binary(hex_value)
+                conversion_results['Hex to RGB'] = {'Hex': hex_value, 'RGB': rgb, 'Binary': binary_value}
+                easygui.msgbox(msg='RGB values: {}\n\nHexadecimal value: {}\n\nBinary value: {}'.format(rgb,hex_value,binary_value), title='Conversion Result')
             except ValueError:
                 easygui.msgbox('Invalid hexadecimal value. Please enter a valid value.', title='Error')
     
@@ -52,7 +62,9 @@ while True:
         if hex_value is not None:
             try:
                 binary_value = hex_to_binary(hex_value)
-                easygui.msgbox('Binary values: {}'.format(binary_value), title='Conversion Result')
+                rgb = hex_to_rgb(hex_value)
+                conversion_results['Hex to Binary'] = {'Hex': hex_value, 'Binary': binary_value, 'RGB': rgb}
+                easygui.msgbox(msg='Binary values: {}\n\nHexadecimal value: {}\n\nRGB values: {}'.format(binary_value,hex_value,rgb), title='Conversion Result')
             except ValueError:
                 easygui.msgbox('Invalid hexadecimal value. Please enter a valid value.', title='Error')
 
@@ -61,7 +73,19 @@ while True:
         if binary_value is not None:
             try:
                 hex_value = binary_to_hex(binary_value)
-                easygui.msgbox('Hexadecimal value: {}'.format(hex_value), title='Conversion Result')
+                rgb = hex_to_rgb(hex_value)
+                conversion_results['Binary to Hex'] = {'Binary': binary_value, 'Hex': hex_value, 'RGB': rgb}
+                easygui.msgbox(msg='Hexadecimal value: {}\n\nBinary values: {}\n\nRGB values: {}'.format(hex_value,binary_value,rgb), title='Conversion Result')
             except ValueError:
                 easygui.msgbox('Invalid binary value. Please enter a valid value.', title='Error')
-    exit()
+                
+    # Save the conversion results to a file
+    save = easygui.buttonbox('Do you want to save the conversion results?', choices=['Yes', 'No'], title='Save Results')
+    if save == 'Yes':
+        file_path = easygui.filesavebox(default='.txt', filetypes=['*.txt'], title='Save Results')
+        if file_path:
+            with open(file_path, 'w') as file:
+                file.write(str(conversion_results))
+                easygui.msgbox('Conversion results have been saved.', title='Save Successful')
+        else:
+            easygui.msgbox('Invalid file path. The conversion results were not saved.', title='Save Error')
